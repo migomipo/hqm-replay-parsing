@@ -73,10 +73,6 @@ pub struct HQMMessageReader<'a> {
 }
 
 impl<'a> HQMMessageReader<'a> {
-    #[allow(dead_code)]
-    pub fn get_pos(&self) -> usize {
-        self.pos
-    }
 
     fn safe_get_byte(&self, pos: usize) -> u8 {
         if pos < self.buf.len() {
@@ -93,25 +89,6 @@ impl<'a> HQMMessageReader<'a> {
         return res;
     }
 
-    pub fn read_bytes_aligned(&mut self, n: usize) -> Vec<u8> {
-        self.align();
-
-        let mut res = Vec::with_capacity(n);
-        for i in self.pos..(self.pos + n) {
-            res.push(self.safe_get_byte(i))
-        }
-        self.pos = self.pos + n;
-        return res;
-    }
-
-    pub fn read_u16_aligned(&mut self) -> u16 {
-        self.align();
-        let b1 = self.safe_get_byte(self.pos) as u16;
-        let b2 = self.safe_get_byte(self.pos + 1) as u16;
-        self.pos = self.pos + 2;
-        return b1 | b2 << 8;
-    }
-
     pub fn read_u32_aligned(&mut self) -> u32 {
         self.align();
         let b1 = self.safe_get_byte(self.pos) as u32;
@@ -122,7 +99,6 @@ impl<'a> HQMMessageReader<'a> {
         return b1 | b2 << 8 | b3 << 16 | b4 << 24;
     }
 
-    #[allow(dead_code)]
     pub fn read_pos(&mut self, b: u8, old_value: Option<u32>) -> u32 {
         let pos_type = self.read_bits(2);
         match pos_type {
@@ -146,7 +122,6 @@ impl<'a> HQMMessageReader<'a> {
         }
     }
 
-    #[allow(dead_code)]
     pub fn read_bits_signed(&mut self, b: u8) -> i32 {
         let a = self.read_bits(b);
 
@@ -189,7 +164,6 @@ impl<'a> HQMMessageReader<'a> {
         }
     }
 
-    #[allow(dead_code)]
     pub fn next(&mut self) {
         self.pos += 1;
         self.bit_pos = 0;
