@@ -19,7 +19,6 @@ const TABLE: [[&'static Vector3<f32>; 3]; 8] = [
     [&UZN, &UXN, &UYN],
 ];
 
-
 #[allow(dead_code)]
 pub fn convert_matrix_from_network(b: u8, v1: u32, v2: u32) -> Matrix3<f32> {
     let r1 = convert_rot_column_from_network(b, v1);
@@ -209,7 +208,7 @@ impl<'a> HQMMessageReader<'a> {
 pub enum HQMObjectPacket {
     None,
     Puck(HQMPuckPacket),
-    Skater(HQMSkaterPacket)
+    Skater(HQMSkaterPacket),
 }
 
 #[derive(Debug)]
