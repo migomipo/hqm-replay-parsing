@@ -91,10 +91,10 @@ impl<'a> HQMMessageReader<'a> {
 
     pub fn read_u32_aligned(&mut self) -> u32 {
         self.align();
-        let b1 = self.safe_get_byte(self.pos) as u32;
-        let b2 = self.safe_get_byte(self.pos + 1) as u32;
-        let b3 = self.safe_get_byte(self.pos + 2) as u32;
-        let b4 = self.safe_get_byte(self.pos + 3) as u32;
+        let b1: u32 = self.safe_get_byte(self.pos).into();
+        let b2: u32 = self.safe_get_byte(self.pos + 1).into();
+        let b3: u32 = self.safe_get_byte(self.pos + 2).into();
+        let b4: u32 = self.safe_get_byte(self.pos + 3).into();
         self.pos = self.pos + 4;
         return b1 | b2 << 8 | b3 << 16 | b4 << 24;
     }
