@@ -73,7 +73,6 @@ pub struct HQMMessageReader<'a> {
 }
 
 impl<'a> HQMMessageReader<'a> {
-
     fn safe_get_byte(&self, pos: usize) -> u8 {
         if pos < self.buf.len() {
             self.buf[pos]

@@ -152,7 +152,19 @@ fn main() -> Result<(), Box<dyn Error>> {
                         });
                         println!("Goal for {:?}, {:?}, {:?}", team, goal_name, assist_name);
                     }
-                    _ => {}
+                    HQMMessage::Chat {
+                        player_index, ref message
+                    } => {
+                        let name = player_index.and_then(|i| {
+                            let p = current_player_list[i].as_ref();
+                            p.map(|p| p.name.clone())
+                        });
+                        if let Some(name) = name {
+                            println!("{}: {}", name, message);
+                        } else {
+                            println!("[Server]: {}", message);
+                        }
+                    }
                 }
 
                 messages_in_this_packet.push(msg);
