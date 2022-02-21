@@ -30,8 +30,8 @@ pub struct HQMSkater {
     pub rot: Matrix3<f32>,
     pub stick_pos: Point3<f32>,  // Measured in meters
     pub stick_rot: Matrix3<f32>, // Rotation matrix
-    pub head_rot: f32,           // Radians
-    pub body_rot: f32,           // Radians
+    pub body_turn: f32,           // Radians
+    pub body_lean: f32,           // Radians
 }
 
 #[derive(Debug, Clone)]
@@ -305,16 +305,16 @@ fn read_objects(
                 let stick_r1 = reader.read_pos(25, old_skater.map(|x| x.stick_rot.0));
                 let stick_r2 = reader.read_pos(25, old_skater.map(|x| x.stick_rot.1));
 
-                let head_rot = reader.read_pos(16, old_skater.map(|x| x.head_rot));
-                let body_rot = reader.read_pos(16, old_skater.map(|x| x.body_rot));
+                let body_turn = reader.read_pos(16, old_skater.map(|x| x.body_turn));
+                let body_lean = reader.read_pos(16, old_skater.map(|x| x.body_lean));
 
                 HQMObjectPacket::Skater(HQMSkaterPacket {
                     pos: (x, y, z),
                     rot: (r1, r2),
                     stick_pos: (stick_x, stick_y, stick_z),
                     stick_rot: (stick_r1, stick_r2),
-                    head_rot,
-                    body_rot,
+                    body_turn,
+                    body_lean,
                 })
                 // Player
             } else if object_type == 1 {
@@ -382,8 +382,8 @@ fn read_objects(
                     rot,
                     stick_pos,
                     stick_rot,
-                    head_rot: (packet.head_rot as f32 - 16384.0) / 8192.0,
-                    body_rot: (packet.body_rot as f32 - 16384.0) / 8192.0,
+                    body_turn: (packet.body_turn as f32 - 16384.0) / 8192.0,
+                    body_lean: (packet.body_lean as f32 - 16384.0) / 8192.0,
                 })
             }
         })

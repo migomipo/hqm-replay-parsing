@@ -195,8 +195,8 @@ pub struct HQMSkaterPacket {
     pub rot: (u32, u32),
     pub stick_pos: (u32, u32, u32),
     pub stick_rot: (u32, u32),
-    pub head_rot: u32,
-    pub body_rot: u32,
+    pub body_turn: u32,
+    pub body_lean: u32,
 }
 
 #[derive(Debug)]
