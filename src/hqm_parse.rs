@@ -139,9 +139,14 @@ impl<'a> HQMMessageReader<'a> {
         while bits_remaining > 0 {
             let bits_possible_to_write = 8 - self.bit_pos;
             let bits = min(bits_remaining, bits_possible_to_write);
-            let mask = !(!0u32 << bits);
-            let a = (self.safe_get_byte(self.pos) as u32 >> self.bit_pos) & mask;
 
+            let mask = if bits == 8 {
+                u8::MAX
+            } else {
+                !(u8::MAX << bits)
+            };
+            let a = (self.safe_get_byte(self.pos) >> self.bit_pos) & mask;
+            let a: u32 = a.into();
             res = res | (a << p);
 
             if bits_remaining >= bits_possible_to_write {
