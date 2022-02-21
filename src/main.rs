@@ -137,6 +137,21 @@ fn main() -> Result<(), Box<dyn Error>> {
                             current_player_list[player_index] = None;
                         }
                     }
+                    HQMMessage::Goal {
+                        team,
+                        goal_player_index,
+                        assist_player_index,
+                    } => {
+                        let goal_name = goal_player_index.and_then(|i| {
+                            let p = current_player_list[i].as_ref();
+                            p.map(|p| p.name.clone())
+                        });
+                        let assist_name = assist_player_index.and_then(|i| {
+                            let p = current_player_list[i].as_ref();
+                            p.map(|p| p.name.clone())
+                        });
+                        println!("Goal for {:?}, {:?}, {:?}", team, goal_name, assist_name);
+                    }
                     _ => {}
                 }
 
@@ -178,7 +193,7 @@ fn read_message(reader: &mut HQMMessageReader) -> HQMMessage {
             _ => None,
         };
         let object_index = match reader.read_bits(6) {
-            u32::MAX => None,
+            0x3F => None,
             x => Some(x as usize),
         };
         let object = object_index.zip(team);
@@ -204,11 +219,11 @@ fn read_message(reader: &mut HQMMessageReader) -> HQMMessage {
             _ => HQMTeam::Blue,
         };
         let goal_player_index = match reader.read_bits(6) {
-            u32::MAX => None,
+            0x3F => None,
             x => Some(x as usize),
         };
         let assist_player_index = match reader.read_bits(6) {
-            u32::MAX => None,
+            0x3F => None,
             x => Some(x as usize),
         };
         HQMMessage::Goal {
@@ -218,7 +233,7 @@ fn read_message(reader: &mut HQMMessageReader) -> HQMMessage {
         }
     } else if message_type == 2 {
         let player_index = match reader.read_bits(6) {
-            u32::MAX => None,
+            0x3F => None,
             x => Some(x as usize),
         };
         let size = reader.read_bits(6);
